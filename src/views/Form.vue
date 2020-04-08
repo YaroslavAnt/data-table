@@ -5,7 +5,7 @@
         <v-col cols="12" sm="8" md="4">
           <v-card class="elevation-12">
             <v-toolbar color="primary" dark flat>
-              <v-toolbar-title>Login form</v-toolbar-title>
+              <v-toolbar-title>Submit single form</v-toolbar-title>
               <v-spacer />
             </v-toolbar>
 
@@ -57,6 +57,23 @@
             <v-card-actions>
               <v-spacer />
               <v-btn @click="submit" color="primary">Share</v-btn>
+            </v-card-actions>
+          </v-card>
+
+          <v-card class="elevation-12 mt-10">
+            <v-toolbar color="primary" dark flat>
+              <v-toolbar-title>Submit all form</v-toolbar-title>
+              <v-spacer />
+            </v-toolbar>
+
+            <v-card-text>
+              <form>
+                <v-textarea outlined name="all-users" label="Insert all users" v-model="all"></v-textarea>
+              </form>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer />
+              <v-btn @click="submitAll" color="primary">Insert all</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -144,7 +161,6 @@ export default {
       this.email = "";
     },
     submit() {
-      console.log("submit!");
       this.$v.$touch();
       if (this.$v.$invalid) {
         alert("Data is not valid");
@@ -153,6 +169,16 @@ export default {
           ? localStorage.setItem("users", JSON.stringify(this.withUpdatedUser))
           : localStorage.setItem("users", JSON.stringify(this.withNewUser));
         this.$router.push("/");
+      }
+    },
+    submitAll() {
+      console.log(this.all);
+      const parsedAll = JSON.parse(this.all);
+      if (typeof parsedAll === "object") {
+        localStorage.setItem("users", this.all);
+        this.$router.push("/");
+      } else {
+        alert("Data is not valid");
       }
     }
   },
@@ -170,7 +196,8 @@ export default {
       phone: userObj.phone,
       email: userObj.email,
       isEdited: userObj.isEdited,
-      memoisedEmail: userObj.email
+      memoisedEmail: userObj.email,
+      all: ""
     };
   }
 };
