@@ -38,7 +38,7 @@ export default {
   }),
   methods: {
     initUpdateUser(user) {
-      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("user", JSON.stringify({ ...user, isEdited: true }));
       this.$router.push("/form");
     },
     deleteUser(deletedUser) {
@@ -53,6 +53,9 @@ export default {
         localStorage.setItem("users", JSON.stringify(newData));
       }
     }
+  },
+  mounted() {
+    localStorage.removeItem("user");
   }
 };
 </script>
