@@ -68,7 +68,7 @@
 
             <v-card-text>
               <form>
-                <v-textarea outlined name="all-users" label="Insert all users" v-model="all"></v-textarea>
+                <v-textarea outlined name="all-users" label="Import JSON" v-model="all"></v-textarea>
               </form>
             </v-card-text>
             <v-card-actions>
