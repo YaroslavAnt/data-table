@@ -1,71 +1,57 @@
 <template>
   <div class="home">
-    <v-data-table
-      :headers="headers"
-      :items="getProductsForTable"
-      :server-items-length='productsData.total'
-      :currentPage.sync="currentPage"
-      :pageCount='productsData.last_page'
-      hide-default-footer
-      class="elevation-1"
-    >
+    <v-data-table :headers="headers" :items="storedData" class="elevation-1">
       <template v-slot:top>
-        <v-toolbar
-          flat
-          color="white"
-        >
-          <v-toolbar-title>Категория: {{getCategoryFromParams}}</v-toolbar-title>
-          <v-divider
-            class="mx-4"
-            inset
-            vertical
-          ></v-divider>
+        <v-toolbar flat color="white">
+          <v-toolbar-title>Users</v-toolbar-title>
+          <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
-          <v-dialog
-            v-model="dialog"
-            max-width="500px"
-          >
-            <template v-slot:activator="{ on }">
-              <v-btn
-                v-on="on"
-                color="primary"
-                dark
-                class="mb-2"
-                @click="addItem()"
-              >Добавить товар</v-btn>
-            </template>
-            
-          </v-dialog>
+          <v-btn color="primary" @click.native="$router.push(`/form`)">Create user</v-btn>
         </v-toolbar>
       </template>
 
-      
-
-      
-
       <template v-slot:item.action="{ item }">
-        <v-icon
-          small
-          class="mr-2"
-          @click="editItem(item)"
-        >mdi-pencil</v-icon>
-        <v-icon
-          small
-          @click="deleteItem(item)"
-        >mdi-delete</v-icon>
+        <v-btn icon color="orange">
+          <v-icon @click="initUpdateUser(item)">mdi-pencil</v-icon>
+        </v-btn>
+        <v-btn icon color="red">
+          <v-icon @click="deleteUser(item)">mdi-delete</v-icon>
+        </v-btn>
       </template>
     </v-data-table>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
-
 export default {
   name: "Home",
-  components: {
-    HelloWorld
+
+  data: () => ({
+    headers: [
+      { value: "name", text: "Name" },
+      { value: "surname", text: "Surname" },
+      { value: "phone", text: "Phone", sortable: false },
+      { value: "email", text: "Email", sortable: false },
+      { value: "action", text: "Actions", sortable: false }
+    ],
+    storedData: JSON.parse(localStorage.getItem("users"))
+  }),
+  methods: {
+    initUpdateUser(user) {
+      localStorage.setItem("user", JSON.stringify(user));
+      this.$router.push("/form");
+    },
+    deleteUser(deletedUser) {
+      const isConfirmed = confirm(
+        `User ${deletedUser.surname} will be removed`
+      );
+      if (isConfirmed) {
+        const newData = [...this.storedData].filter(
+          user => user.email !== deletedUser.email
+        );
+        localStorage.setItem("users", JSON.stringify(newData));
+      }
+    }
   }
 };
 </script>
