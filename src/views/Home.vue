@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <v-data-table :headers="headers" :items="storedData" class="elevation-1">
+    <v-data-table :headers="headers" :items="tableData" class="elevation-1">
       <template v-slot:top>
         <v-toolbar flat color="white">
           <v-toolbar-title>Users</v-toolbar-title>
@@ -34,7 +34,7 @@ export default {
       { value: "email", text: "Email", sortable: false },
       { value: "action", text: "Actions", sortable: false }
     ],
-    storedData: JSON.parse(localStorage.getItem("users"))
+    tableData: JSON.parse(localStorage.getItem("users"))
   }),
   methods: {
     initUpdateUser(user) {
@@ -46,9 +46,10 @@ export default {
         `User ${deletedUser.surname} will be removed`
       );
       if (isConfirmed) {
-        const newData = [...this.storedData].filter(
+        const newData = [...this.tableData].filter(
           user => user.email !== deletedUser.email
         );
+        this.tableData = newData;
         localStorage.setItem("users", JSON.stringify(newData));
       }
     }
